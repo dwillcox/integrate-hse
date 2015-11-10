@@ -1,0 +1,5 @@
+poly_K		1.982d-6
+poly_gamma	2.75
+rho0		5d14
+DR_SAVE		0.5d5
+NDR_SAVE	60
