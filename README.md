@@ -13,5 +13,7 @@ To generate the Mass-Radius and Mass-Central Density curves:
 2) python run_m-r.py
 3) python plot_m-r.py
 
+To change the physical parameters (polytropic EOS K, gamma or central density) and the profile logging steps, edit hse.par or the parameter section of run_m-r.py, as needed.
+
 Compiles with gfortran 5.1.1 and uses SUNDIALS 2.6.2, LAPACK 3.5.0, & BLAS 3.5.0.
 Plotting scripts use Python 2.7.10 provided by Anaconda 2.3.0.
