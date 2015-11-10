@@ -8,7 +8,7 @@ program integrator
   implicit none
 
   ! Integration Data Structures and Parameters
-  double precision, parameter :: R0 = 0.001d0
+  double precision, parameter :: R0 = 0.0d0
   double precision, dimension(2) :: Y0
   double precision :: R_TARGET ! Try to integrate to RFIN = NDRV*DRSV
   double precision :: RK ! Stores the radius at the current interval
@@ -31,8 +31,8 @@ program integrator
   integer, parameter ::   METH = 1 ! Use non-stiff Adams integration
   integer, parameter :: ITMETH = 2 ! Use Newton iteration
   integer, parameter ::  IATOL = 1 ! Use scalar absolute tolerance
-  double precision, parameter :: RTOL = 1.0d-8 ! Relative tolerance
-  double precision, parameter :: ATOL = 1.0d-8 ! Absolute tolerance
+  double precision, parameter :: RTOL = 1.0d-12 ! Relative tolerance
+  double precision, parameter :: ATOL = 1.0d-12 ! Absolute tolerance
 
   integer, parameter :: MAX_NSTEPS = 10000 ! Maximum number of steps to solution
   

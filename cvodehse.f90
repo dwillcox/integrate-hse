@@ -31,11 +31,16 @@ contains
     call eos_p(p)
     rho = eos_data%rho
     e = eos_data%e
-    
-    YDOT(jmass) = 4.0d0*PI*(R**2)*rho*(1.0d0 + e/c**2)
-    YDOT(jpres) = -G/(R**2)*(rho*(1.0d0 + e/c**2) + p/c**2)* &
-         (M + 4.0d0*PI*(R**3)*p/c**2)/(1.0d0 - G*M/(R*c**2))
 
+    if (R == 0.0d0) then
+       YDOT(jmass) = 0.0d0
+       YDOT(jpres) = 0.0d0
+    else
+       YDOT(jmass) = 4.0d0*PI*(R**2)*rho*(1.0d0 + e/c**2)
+       YDOT(jpres) = -G/(R**2)*(rho*(1.0d0 + e/c**2) + p/c**2)* &
+            (M + 4.0d0*PI*(R**3)*p/c**2)/(1.0d0 - G*M/(R*c**2))
+    end if
+    
     IER = 0 ! Successful
   end subroutine FCVFUN
 
@@ -71,27 +76,34 @@ contains
     de_dp = eos_data%de_dp
     e = eos_data%e
     rho = eos_data%rho
-    
-    !! Compute the (Dense) Jacobian Matrix and store it column-wise in DJAC
-    ! DJAC(1,1) = d(dM/dr)/dM
-    DJAC(1,1) = 0.0d0
-    
-    ! DJAC(1,2) = d(dM/dr)/dp
-    DJAC(1,2) = 4.0d0*PI*(R**2)*(K**(-1.0d0/gamma) * p**(-1.0d0 + 1.0d0/gamma) / gamma + &
-         1.0d0/(gamma - 1.0d0)/c**2)
 
-    chi = 1.0d0 - G*M/(R*c**2)
-    ! DJAC(2,1) = d(dp/dr)/dM
-    DJAC(2,1) = -G/(R**2) * (rho*(1.0d0 + e/c**2) + p/c**2) * &
-         (1.0d0/chi + (M + 4.0d0*PI*(R**3)*p/c**2)*G/(r*c**2)/(chi**2))
+    if (R == 0.0d0) then
+       DJAC(1,1) = 0.0d0
+       DJAC(1,2) = 0.0d0
+       DJAC(2,1) = 0.0d0
+       DJAC(2,2) = 0.0d0
+    else
+       !! Compute the (Dense) Jacobian Matrix and store it column-wise in DJAC
+       ! DJAC(1,1) = d(dM/dr)/dM
+       DJAC(1,1) = 0.0d0
 
-    xi = (M + 4.0d0*PI*(R**3)*p/c**2)/chi
-    ! DJAC(2,2) = d(dp/dr)/dp
-    DJAC(2,2) = -G/(R**2) * ( &
-         (1.0d0 + e/c**2) * xi * drho_dp + &
-         (rho/c**2) * xi * de_dp + &
-         (xi/c**2 + (rho*(1.0d0 + e/c**2) + p/c**2)*(4.0d0*PI*R**3)/(c**2)/chi) &
-         )
+       ! DJAC(1,2) = d(dM/dr)/dp
+       DJAC(1,2) = 4.0d0*PI*(R**2)*(K**(-1.0d0/gamma) * p**(-1.0d0 + 1.0d0/gamma) / gamma + &
+            1.0d0/(gamma - 1.0d0)/c**2)
+
+       chi = 1.0d0 - G*M/(R*c**2)
+       ! DJAC(2,1) = d(dp/dr)/dM
+       DJAC(2,1) = -G/(R**2) * (rho*(1.0d0 + e/c**2) + p/c**2) * &
+            (1.0d0/chi + (M + 4.0d0*PI*(R**3)*p/c**2)*G/(r*c**2)/(chi**2))
+
+       xi = (M + 4.0d0*PI*(R**3)*p/c**2)/chi
+       ! DJAC(2,2) = d(dp/dr)/dp
+       DJAC(2,2) = -G/(R**2) * ( &
+            (1.0d0 + e/c**2) * xi * drho_dp + &
+            (rho/c**2) * xi * de_dp + &
+            (xi/c**2 + (rho*(1.0d0 + e/c**2) + p/c**2)*(4.0d0*PI*R**3)/(c**2)/chi) &
+            )
+    end if
 
     IER = 0 ! Success
   end subroutine FCVDJAC
