@@ -24,15 +24,15 @@ contains
 
     IER = -1
     
-    M = Y(iMASS)
-    p = Y(iPRES)
+    M = Y(jmass)
+    p = Y(jpres)
 
     call eos_p(p)
     rho = eos_data%rho
     e = eos_data%e
     
-    YDOT(iMASS) = 4.0d0*PI*(R**2)*rho*(1.0d0 + e/c**2)
-    YDOT(iPRES) = -G/(R**2)*(rho*(1.0d0 + e/c**2) + p/c**2)* &
+    YDOT(jmass) = 4.0d0*PI*(R**2)*rho*(1.0d0 + e/c**2)
+    YDOT(jpres) = -G/(R**2)*(rho*(1.0d0 + e/c**2) + p/c**2)* &
          (M + 4.0d0*PI*(R**3)*p/c**2)/(1.0d0 - G*M/(R*c**2))
 
     IER = 0 ! Successful
@@ -59,8 +59,8 @@ contains
 
     IER = -1
     
-    M = Y(iMASS)
-    p = Y(iPRES)
+    M = Y(jmass)
+    p = Y(jpres)
     
     call eos_p(p)
 
