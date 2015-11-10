@@ -17,8 +17,11 @@ OBJS	= $(SRCS:.f90=.o)
 
 MAIN	= inthse
 
+all:	${MAIN}
+	@echo	Compilation complete!
+
 %.mod : %.o
-	@echo Hello
+	@echo Compiled module.
 
 cvodehse.o : cvodehse.f90 cvode_indices.mod polytrope_eos.mod physical_constants.mod
 	${F90} ${FFLAGS} -c $< -o $@
@@ -43,9 +46,6 @@ polytrope_eos.o : polytrope_eos.f90
 
 $(MAIN): ${OBJS}
 	${CC} ${INCLUDE} -o ${MAIN} ${OBJS} ${LLIBSS} ${LLIBSM}
-
-all:	${MAIN}
-	@echo	Compilation complete!
 
 clean:
 	rm *.o *.mod *~ ${MAIN}
