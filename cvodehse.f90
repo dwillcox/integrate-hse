@@ -14,6 +14,7 @@ contains
     use cvode_indices
     use polytrope_eos
     use physical_constants
+
     double precision, dimension(*), intent(in) :: Y, RPAR
     integer, dimension(*), intent(in) :: IPAR
     double precision, dimension(*), intent(out) :: YDOT
@@ -94,5 +95,20 @@ contains
 
     IER = 0 ! Success
   end subroutine FCVDJAC
+
+  subroutine FCVROOTFN(R, Y, G, IPAR, RPAR, IER) bind(C, name='fcvrootfn_')
+    use cvode_indices
+
+    double precision, intent(in) :: R
+    double precision, dimension(*), intent(in) :: Y
+    double precision, dimension(*), intent(inout) :: G
+    integer, dimension(*), intent(in) :: IPAR
+    double precision, dimension(*), intent(in) :: RPAR
+    integer, intent(out) :: IER
+
+    IER = -1
+    G(iproot) = Y(jpres)
+    IER = 0
+  end subroutine FCVROOTFN
 
 end module cvodehse
