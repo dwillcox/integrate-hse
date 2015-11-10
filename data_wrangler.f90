@@ -39,13 +39,13 @@ contains
     ! Set format for writing column entries
     write(hfmt,'(A,I5,A)') '(', NPROFILE, '(1x,A25))'
     write(rfmt,'(A,I5,A)') '(', NPROFILE, '(1x,ES25.14))'
-    open(unit=10, file=profile_file_name, action='write', &
+    open(unit=2, file=profile_file_name, action='write', &
          status='replace', recl=(25*NPROFILE+10))
-    write(10, fmt=hfmt) 'Mass', 'Pressure', 'Density', 'Einternal', 'D_RHO_D_P', 'D_Eint_D_P', 'Radius'
+    write(2, fmt=hfmt) 'Mass', 'Pressure', 'Density', 'Einternal', 'D_RHO_D_P', 'D_Eint_D_P', 'Radius'
     do K = 1, KFIN
-       write(10, fmt=rfmt) (hse_profile(J, K), J=1, NPROFILE)
+       write(2, fmt=rfmt) (hse_profile(J, K), J=1, NPROFILE)
     end do
-    close(unit=10)
+    close(unit=2)
   end subroutine write_solution
 
 end module data_wrangler

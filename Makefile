@@ -12,7 +12,7 @@ CC	= gfortran
 LLIBSS	= -L${SUNLIBDIR} -lsundials_fcvode -lsundials_cvode -lsundials_fnvecserial -lsundials_nvecserial
 LLIBSM	= -L/usr/lib64 -llapack -lblas
 
-SRCS 	= cvodehse.f90 cvode_indices.f90 integrator.f90 physical_constants.f90 polytrope_eos.f90 data_wrangler.f90
+SRCS 	= cvodehse.f90 cvode_indices.f90 integrator.f90 physical_constants.f90 polytrope_eos.f90 data_wrangler.f90 parameters.f90
 OBJS	= $(SRCS:.f90=.o)
 
 MAIN	= inthse
@@ -23,10 +23,13 @@ MAIN	= inthse
 cvodehse.o : cvodehse.f90 cvode_indices.mod polytrope_eos.mod physical_constants.mod
 	${F90} ${FFLAGS} -c $< -o $@
 
-integrator.o : integrator.f90 polytrope_eos.mod cvodehse.mod cvode_indices.mod data_wrangler.mod
+integrator.o : integrator.f90 polytrope_eos.mod cvodehse.mod cvode_indices.mod data_wrangler.mod parameters.mod
 	${F90} ${FFLAGS} -c $< -o $@
 
 data_wrangler.o : data_wrangler.f90 polytrope_eos.mod cvode_indices.mod
+	${F90} ${FFLAGS} -c $< -o $@
+
+parameters.o : parameters.f90
 	${F90} ${FFLAGS} -c $< -o $@
 
 cvode_indices.o : cvode_indices.f90
