@@ -9,8 +9,11 @@ Originally written for Mike Zingale's Stars course at Stony Brook University:
 http://bender.astro.sunysb.edu/classes/stars/
 
 To generate the Mass-Radius and Mass-Central Density curves:
+
 1) make
+
 2) python run_m-r.py
+
 3) python plot_m-r.py
 
 To change the physical parameters (polytropic EOS K, gamma or central density) and the profile logging steps, edit hse.par or the parameter section of run_m-r.py, as needed.
