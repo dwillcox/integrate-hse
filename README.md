@@ -14,3 +14,4 @@ To generate the Mass-Radius and Mass-Central Density curves:
 3) python plot_m-r.py
 
 Compiles with gfortran 5.1.1 and uses SUNDIALS 2.6.2, LAPACK 3.5.0, & BLAS 3.5.0.
+Plotting scripts use Python 2.7.10 provided by Anaconda 2.3.0.
