@@ -2,11 +2,10 @@
 
 SUNINCDIR = /home/eugene/local/sundials/instdir/include
 SUNLIBDIR = /home/eugene/local/sundials/instdir/lib
-LSEOSDIR  = /home/eugene/codes/astro/lseos_v2.7
 
 F90 	= gfortran
 FFLAGS 	= -O3
-INCLUDE	= -I ${SUNINCDIR} -I ${LSEOSDIR}
+INCLUDE	= -I ${SUNINCDIR}
 F90LINK	= gfortran
 CC	= gfortran
 

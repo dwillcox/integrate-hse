@@ -1,32 +1,5 @@
-&intparams
-	DR_SAVE  = 0.5d5
-	NDR_SAVE = 60
-	WHICH_EOS = 1 ! 1 = polytrope, 2 = Lattimer-Swesty
-/
-
-
-&lseosinit
-	ls_vars%rho = 5.0d14
-	ls_vars%t = 1.0d6
-/
-
-
-&polyeosinit
-	poly_vars%rho = 5.0d14
-	poly_vars%t = 1.0d6
-/
-
-
-&lsparams
-	ls_ivars%ye = 0.5
-	ls_ivars%nuclei_nucleon_density = 0.155
-        ls_ivars%eta_po = -15.0d0
-	ls_ivars%eta_no = -10.0d0
-        ls_ivars%baryon_density = ! baryon number density
-	ls_ivars%exterior_proton_fraction = ! ye*baryon_density is a good initial guess
-/
-
-&polyparams
-	poly_ivars%K = 1.982d-6
-	poly_ivars%gamma = 2.75
-/
+poly_K		1.982d-6
+poly_gamma	2.75
+rho0		5d14
+DR_SAVE		0.5d5
+NDR_SAVE	60
