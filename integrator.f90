@@ -1,5 +1,5 @@
 program integrator
-  use polytrope_eos
+  use eos
   use cvode_indices
   use cvodehse
   use data_wrangler
@@ -10,12 +10,14 @@ program integrator
   ! Integration Data Structures and Parameters
   double precision, parameter :: R0 = 0.0d0
   double precision, dimension(2) :: Y0
+  double precision :: central_density
   double precision :: R_TARGET ! Try to integrate to RFIN = NDRV*DRSV
   double precision :: RK ! Stores the radius at the current interval
   integer :: K ! Stores which interval we're in (count to NDR_SAVE)
   integer :: KFIN ! Stores how many intervals we went (K = 1 to KFIN)
   double precision :: DR_SAVE ! Save solution each DR_SAVE (cm)
   integer :: NDR_SAVE ! (Such that NDR_SAVE*DR_SAVE=R_TARGET=30d5)
+  integer :: WHICH_EOS ! Parameter determines which EOS to use
   double precision               :: R ! Holds the R integrated to
   double precision, dimension(2) :: Y ! Holds the solution Y integrated to
   double precision, dimension(2) :: DKY ! Holds the p=0 root solution for Y
@@ -51,30 +53,32 @@ program integrator
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   ! Read runtime parameters
-  call get_run_parameters()
-  DR_SAVE = runtime_pars%DR_SAVE
-  NDR_SAVE = runtime_pars%NDR_SAVE
+  call open_parameters()
+  namelist /intparams/ DR_SAVE, NDR_SAVE, WHICH_EOS
+  rewind(unit=parameter_file_unit)
+  read(unit=parameter_file_unit, nml=intparams)
 
+  ! Initialize the EOS, getting the central density
+  call eos_init(WHICH_EOS)
+  central_density = eos_vars%rho
+
+  ! Parameters have been read, close the parameter file
+  call close_parameters()
+  
   ! Allocate Profile array
   allocate( hse_profile(NPROFILE, NDR_SAVE) )
   
-  ! Initialize the EOS
-  call eos_init(runtime_pars%poly_K, runtime_pars%poly_gamma)
-
   ! Print Physical Parameters
   write(*,*) 'Integrating starting with:'
   write(*,'(A,ES25.14)') 'R0 = ', R0
-  write(*,'(A,ES25.14)') 'Central Density, rho0 = ', runtime_pars%rho0
+  write(*,'(A,ES25.14)') 'Central Density = ', central_density
   
-  ! Print EOS parameters
-  write(*,'(A,ES25.14,A,ES25.14)') 'Initialized EOS with K = ', runtime_pars%poly_K, ' and gamma = ', runtime_pars%poly_gamma
-
   ! Initialize the Integration
   ! Mass (r=0) = 0.0
   Y0(jmass) = 0.0d0
-  ! Pressure (r=0) = EOS(rho0)
-  call eos_rho(runtime_pars%rho0) ! Compute EOS quantities at density rho0
-  Y0(jpres) = eos_data%p ! EOS Pressure for density rho0
+  ! Pressure (r=0) = EOS(central_density)
+  call eos_rho(central_density) ! Compute EOS quantities at density central_density
+  Y0(jpres) = eos_data%p ! EOS Pressure for density central_density
   ! Integration target R_TARGET = NDR_SAVE*DR_SAVE
   R_TARGET = DBLE(NDR_SAVE)*DR_SAVE
 
@@ -142,4 +146,3 @@ program integrator
   write(*,'(A,ES25.14)') 'Final Pressure: ', Y(jpres)
   
 end program integrator
-

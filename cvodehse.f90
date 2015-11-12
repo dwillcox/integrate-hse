@@ -36,9 +36,9 @@ contains
        YDOT(jmass) = 0.0d0
        YDOT(jpres) = 0.0d0
     else
-       YDOT(jmass) = 4.0d0*PI*(R**2)*rho*(1.0d0 + e/c**2)
-       YDOT(jpres) = -G/(R**2)*(rho*(1.0d0 + e/c**2) + p/c**2)* &
-            (M + 4.0d0*PI*(R**3)*p/c**2)/(1.0d0 - G*M/(R*c**2))
+       YDOT(jmass) = 4.0d0 * pc%PI * (R**2) * rho * (1.0d0 + e/(pc%c**2))
+       YDOT(jpres) = -pc%G/(R**2)*(rho*(1.0d0 + e/(pc%c**2)) + p/(pc%c**2))* &
+            (M + 4.0d0 * pc%PI * (R**3) * p/(pc%c**2))/(1.0d0 - pc%G * M/(R*(pc%c**2)))
     end if
     
     IER = 0 ! Successful
@@ -88,20 +88,22 @@ contains
        DJAC(1,1) = 0.0d0
 
        ! DJAC(1,2) = d(dM/dr)/dp
-       DJAC(1,2) = 4.0d0*PI*(R**2)*(K**(-1.0d0/gamma) * p**(-1.0d0 + 1.0d0/gamma) / gamma + &
-            1.0d0/(gamma - 1.0d0)/c**2)
+       DJAC(1,2) = 4.0d0*(pc%PI)*(R**2)*(K**(-1.0d0/gamma) * &
+            p**(-1.0d0 + 1.0d0/gamma) / gamma + &
+            1.0d0/(gamma - 1.0d0)/(pc%c**2))
 
-       chi = 1.0d0 - G*M/(R*c**2)
+       chi = 1.0d0 - (pc%G)*M/(R*(pc%c**2))
        ! DJAC(2,1) = d(dp/dr)/dM
-       DJAC(2,1) = -G/(R**2) * (rho*(1.0d0 + e/c**2) + p/c**2) * &
-            (1.0d0/chi + (M + 4.0d0*PI*(R**3)*p/c**2)*G/(r*c**2)/(chi**2))
+       DJAC(2,1) = -(pc%G)/(R**2) * (rho*(1.0d0 + e/(pc%c**2)) + p/(pc%c**2)) * &
+            (1.0d0/chi + (M + 4.0d0*(pc%PI)*(R**3)*p/(pc%c**2))*(pc%G)/(r*(pc%c**2))/(chi**2))
 
-       xi = (M + 4.0d0*PI*(R**3)*p/c**2)/chi
+       xi = (M + 4.0d0*(pc%PI)*(R**3)*p/(pc%c**2))/chi
        ! DJAC(2,2) = d(dp/dr)/dp
-       DJAC(2,2) = -G/(R**2) * ( &
-            (1.0d0 + e/c**2) * xi * drho_dp + &
-            (rho/c**2) * xi * de_dp + &
-            (xi/c**2 + (rho*(1.0d0 + e/c**2) + p/c**2)*(4.0d0*PI*R**3)/(c**2)/chi) &
+       DJAC(2,2) = -(pc%G)/(R**2) * ( &
+            (1.0d0 + e/(pc%c**2)) * xi * drho_dp + &
+            (rho/(pc%c**2)) * xi * de_dp + &
+            (xi/(pc%c**2) + (rho*(1.0d0 + e/(pc%c**2)) + p/(pc%c**2))* &
+            (4.0d0*(pc%PI)*R**3)/(pc%c**2)/chi) &
             )
     end if
 
