@@ -1,6 +1,5 @@
 module polytrope_eos
   use eos_types
-  use parameters
   
   implicit none
 
@@ -22,6 +21,7 @@ contains
     rewind(unit=parameter_file_unit)
     read(unit=parameter_file_unit, nml=eosinitv)
   end subroutine poly_init
+
   subroutine poly_p(pres)
     double precision, intent(in) :: pres
     poly_vars%p = pres
