@@ -3,8 +3,8 @@ module ls_wrap_eos
   use eos_types
   use physical_constants
 
-  include 'lseos_v2.7.f'
-  include 'eos_m4c.inc'
+!  include 'lseos_v2.7.f'
+!  include 'eos_m4c.inc'
   
   implicit none
 
@@ -18,11 +18,11 @@ module ls_wrap_eos
      double precision :: eta_no  ! good initial guess -10
      double precision :: baryon_density           ! Baryon density (1/fm^3)
      double precision :: exterior_proton_fraction ! Exterior proton fraction
-     double precision, parameter :: XPREV=0.0d0   ! EOS dummy variable
-     integer, parameter :: IFLAG =1  ! Sets EOS input variable
-     integer, parameter :: EOSFLG=0  ! Returns which EOS was used internally
-     integer, parameter :: FORFLG=0  ! Sets whether EOS should determine internal EOS to use
-     integer, parameter :: SF    =1  ! EOS Error flag, 1 if successful
+     double precision :: XPREV=0.0d0   ! EOS dummy variable
+     integer :: IFLAG =1  ! Sets EOS input variable
+     integer :: EOSFLG=0  ! Returns which EOS was used internally
+     integer :: FORFLG=0  ! Sets whether EOS should determine internal EOS to use
+     integer :: SF    =1  ! EOS Error flag, 1 if successful
 
      ! Relative tolerance of pressure solution
      double precision :: pressure_solve_rtol = 1.0d-12
@@ -31,7 +31,28 @@ module ls_wrap_eos
 
   type(eos_data), save :: ls_vars
   type(ls_internal_vars), save :: ls_ivars
-  
+
+  interface
+     subroutine INVEOS( &
+         input_vars, &
+         told, &
+         ye, &
+         baryon_density, &
+         IFLAG, &
+         EOSFLG, &
+         FORFLG, &
+         SF, &
+         XPREV, &
+         exterior_proton_fraction, &
+         )
+       double precision, dimension(4), intent(inout) :: input_vars
+       double precision, intent(in) :: told, ye, baryon_density, XPREV
+       double precision, intent(inout) :: exterior_proton_fraction
+       integer, intent(in) :: IFLAG, FORFLG
+       integer, intent(inout) :: EOSFLG, SF
+     end subroutine INVEOS
+  end interface
+
 contains
 
   subroutine ls_init()
