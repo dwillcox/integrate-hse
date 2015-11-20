@@ -1,7 +1,7 @@
 module data_wrangler
 
   use cvode_indices
-  use polytrope_eos
+  use eos
 
   implicit none
 
@@ -17,10 +17,10 @@ contains
     hse_profile(ipres, k) = ysol(jpres)
 
     call eos_p(ysol(jpres))
-    hse_profile(idens, k) = eos_data%rho
-    hse_profile(ieint, k) = eos_data%e
-    hse_profile(i_ddens_dp, k) = eos_data%drho_dp
-    hse_profile(i_deint_dp, k) = eos_data%de_dp
+    hse_profile(idens, k) = eos_vars%rho
+    hse_profile(ieint, k) = eos_vars%e
+    hse_profile(i_ddens_dp, k) = eos_vars%drho_dp
+    hse_profile(i_deint_dp, k) = eos_vars%de_dp
 
     hse_profile(irads, k) = r
   end subroutine store_solution

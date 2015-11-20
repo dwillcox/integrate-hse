@@ -9,10 +9,10 @@ module parameters
   
 contains
   subroutine init_parameters()
-    open(unit=parameter_file_unit, recl=1024, delim='APOSTROPHE')
+    open(unit=parameter_file_unit, file=parameter_file_name, recl=1024, delim='APOSTROPHE')
 
-    call cvode_init()
-    call eos_init()
+    call cvode_init(parameter_file_unit)
+    call eos_init(parameter_file_unit)
     
     close(unit=parameter_file_unit)
   end subroutine init_parameters

@@ -10,7 +10,7 @@ module physical_constants
      double precision :: c  = 299792458d2 ! cm/s
      double precision :: kb_MeV_per_K = 8.6173324d-11 ! MeV/K
      double precision :: G  = 6.67384d-8 ! cm^3/g/s^2
-     double precision :: MeV_per_erg = 1.602176565d-6
+     double precision :: erg_per_MeV = 1.602176565d-6
 
      ! From AME 2012 Atomic Mass Evaluation
      double precision :: amu = 1660538.921d-30 ! g

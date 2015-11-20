@@ -7,19 +7,22 @@ module polytrope_eos
      double precision :: K, gamma
   end type poly_internal_vars
 
-  type(eos_data), save :: poly_vars
+  type(eos_data), target, save :: poly_vars
   type(poly_internal_vars), save :: poly_ivars
   
 contains
 
-  subroutine poly_init()
+  subroutine poly_init(pfile_unit)
+    integer, intent(in) :: pfile_unit
+    
     namelist /polyparams/ poly_ivars
-    rewind(unit=parameter_file_unit)
-    read(unit=parameter_file_unit, nml=polyparams)
-
     namelist /polyeosinit/ poly_vars ! Initialize the density and temperature
-    rewind(unit=parameter_file_unit)
-    read(unit=parameter_file_unit, nml=eosinitv)
+
+    rewind(unit=pfile_unit)
+    read(unit=pfile_unit, nml=polyparams)
+
+    rewind(unit=pfile_unit)
+    read(unit=pfile_unit, nml=polyeosinit)
   end subroutine poly_init
 
   subroutine poly_p(pres)
